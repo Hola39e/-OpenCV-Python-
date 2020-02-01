@@ -1,0 +1,31 @@
+/ch1
+# otsu阈值 返回值ret为最合适阈值
+ret2,th2 = cv2.threshold(img,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+/ch2
+# 利用高斯核去噪音
+# 5,5 为 斯核的大小 0 为标准差
+blur = cv2.GaussianBlur(img, (5, 5), 0)
+
+/ch3
+多维数组一维化：
+ravel()
+直方图函数：
+plt.hist    #直接同统计一维数组中元素出现次数
+plt.hist(images[i*3].ravel(),256)   #256是长度 0-255
+
+
+/ch4
+#自适应阈值不是全局阈值 otsu是全局阈值
+自适应阈值处理办法：
+cv2.adaptiveThreshold（）
+
+
+th2 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
+cv2.THRESH_BINARY,11,2)         #计算阈值的方法：cv2.ADPTIVE_THRESH_MEAN_C  阈值取自区域平均值
+th3 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+cv2.THRESH_BINARY,11,2)         #cv2.ADAPTIVE_THRESH_GAUSSIAN_C 阈值取自相邻区域加权和 权重为高斯窗口
+# 11是block size 是邻域大小   2是C值 阈值等于平均值或加权平均值减去这个常数
+
+
+
