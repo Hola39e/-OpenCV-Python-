@@ -1,0 +1,55 @@
+/ch1
+2D卷积实现低通滤波（LPF）去除高频成分 实现去除噪声 边界 高频成分一般指：噪音、边界
+需要先创建滤波核
+cv.filter2D()
+
+卷积过程，对单一像素周围对应核的像素取平均数 用平均数代替该像素 直到所有像素都更新一遍
+kernel = np.ones((5,5),np.float32)/25 #滤波核大小5*5
+dst = cv2.filter2D(img,-1,kernel)
+
+参数-1 代表输出图像深度级次与原图一致
+#cv.Filter2D(src, dst, kernel, anchor=(-1, -1))
+#ddepth –desired depth of the destination image;
+#if it is negative, it will be the same as src.depth();
+#the following combinations of src.depth() and ddepth are supported:
+#src.depth() = CV_8U, ddepth = -1/CV_16S/CV_32F/CV_64F
+#src.depth() = CV_16U/CV_16S, ddepth = -1/CV_32F/CV_64F
+#src.depth() = CV_32F, ddepth = -1/CV_32F/CV_64F
+#src.depth() = CV_64F, ddepth = -1/CV_64F
+#when ddepth=-1, the output image will have the same depth as the source.
+
+图像深度与强度解释
+1、intensity image：强度图，是表示单通道图像像素的强度（值的大小）。
+在灰度图像中intensity image指的就是图像的灰度。
+在RGB颜色空间中intensity image可以理解为是R通道的像素灰度值，
+或者G通道的像素灰度值，B通道的像素灰度值，也就是RGB颜色有三个intensity image。
+在其他颜色空间类似，就是说每个通道图像的像素值。
+2、depth image是位深度图像，黑白图像以灰度级次来表述一个点的明暗程度，8位即灰度级次为2的8次方级（256级）。
+16位即灰度级次为2的16次方级。
+
+/ch2
+图像模糊
+
+1.平均操作：   （平均值）
+通过归一化卷积 跟cv.filter2D()有一样的功能
+cv2.blur()
+cv2.boxFilter()
+不用归一化卷积框时 用cv2.boxFilter() 参数normalize=False
+blur = cv2.blur(img,(5,5))
+
+2.高斯模糊      （加权平均值）核大小要为奇数
+cv2.GaussianBlur()
+blur = cv2.GaussianBlur(img,(5,5),0)
+ （5，5）是高斯核大小 #0 是指根据窗口大小（5，5）来􄕐算高斯函数标准差
+ 
+3.中值模糊      （去除椒盐噪声） 奇数核
+median = cv2.medianBlur(img,5)
+
+
+4.双边滤波      （保持边界清晰有效去除噪声）
+blur = cv2.bilateralFilter(img,9,75,75)
+# 9是邻域直径  75 75 指空间高斯函数标准差 灰度相似性高斯函数标准差
+
+
+
+
