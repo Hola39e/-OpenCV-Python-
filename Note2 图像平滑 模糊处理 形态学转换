@@ -52,4 +52,56 @@ blur = cv2.bilateralFilter(img,9,75,75)
 
 
 
+/ch3 
+形态学转换
 
+1. 腐蚀   整幅图像白色区域减少 （用于去除白噪声   可以用来分离两个物体）
+kernel = np.ones((5,5),np.uint8)
+erosion = cv2.erode(img,kernel,iterations = 1)
+
+2. 膨胀   白色区域增加  （先腐蚀去除白噪声 膨胀放大前景  膨胀还可以用来连接两个分开的物体）
+dilation = cv2.dilate(img,kernel,iterations = 1)
+
+3. 开运算  先腐蚀再膨胀  用于去除噪声
+opening = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+
+4. 闭运算  先膨胀再腐蚀  用于去除前景物体上的小洞或前景物体的小黑点
+closing = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+
+5. 形态学梯度  相当于膨胀与腐蚀两幅图像做差运算
+gradient = cv2.morphologyEx(img, cv2.MORPH_GRADIENT, kernel)
+
+6. 礼帽  原始图像与开运算做差
+tophat = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, kernel)
+
+7. 黑帽  原始图像与闭运算做差
+blackhat = cv2.morphologyEx(img, cv2.MORPH_BLACKHAT, kernel)
+
+8. 结构化元素创建 用于创建核 （正方形核，椭圆形核，圆形核）
+
+ 正方形核
+# Rectangular Kernel    
+>>> cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))
+array([[1, 1, 1, 1, 1],
+[1, 1, 1, 1, 1],
+[1, 1, 1, 1, 1],
+[1, 1, 1, 1, 1],
+[1, 1, 1, 1, 1]], dtype=uint8)
+
+ 椭圆形核
+# Elliptical Kernel
+>>> cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
+array([[0, 0, 1, 0, 0],
+[1, 1, 1, 1, 1],
+[1, 1, 1, 1, 1],
+[1, 1, 1, 1, 1],
+[0, 0, 1, 0, 0]], dtype=uint8)
+
+ 十字架形核
+# Cross-shaped Kernel
+>>> cv2.getStructuringElement(cv2.MORPH_CROSS,(5,5))
+array([[0, 0, 1, 0, 0],
+[0, 0, 1, 0, 0],
+[1, 1, 1, 1, 1],
+[0, 0, 1, 0, 0],
+[0, 0, 1, 0, 0]], dtype=uint8)
